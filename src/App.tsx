@@ -120,7 +120,7 @@ export default function App() {
     setDobDay(days[dob.getDay()]);
 
     // Setup Audio
-    audioRef.current = new Audio("/song.mp3");
+    audioRef.current = new Audio(`${import.meta.env.BASE_URL}song.mp3`);
     audioRef.current.loop = true;
     audioRef.current.volume = 0.5;
 
@@ -496,7 +496,7 @@ export default function App() {
         }`}
       >
         <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-          <source src="/bg_video.mp4" type="video/mp4" />
+          <source src={`${import.meta.env.BASE_URL}bg_video.mp4`} type="video/mp4" />
         </video>
         {/* Soft blend overlay directly inside video wrapper, so it only blends the background video */}
         {!isDarkMode && (
