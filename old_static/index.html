@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rumana — June 19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ["'Instrument Serif'", 'serif'],
+          body: ['Barlow', 'sans-serif'],
+        },
+        borderRadius: {
+          DEFAULT: '9999px',
+        },
+      }
+    }
+  }
+</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; color: #fff; overflow-x: hidden; }
+  #root { min-height: 100vh; }
+  #particles-canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:.35;
+}
+
+#cursor-glow{
+  position:fixed;
+  pointer-events:none;
+  z-index:9998;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(167,139,250,.07) 0%,rgba(244,114,182,.03) 45%,transparent 70%);
+  transform:translate(-50%,-50%);
+  transition: opacity .3s ease;
+}
+
+#scroll-bar{
+  position:fixed;
+  top:0;
+  left:0;
+  height:2px;
+  z-index:9999;
+  width:0%;
+  background:linear-gradient(to right,
+  rgba(255,255,255,.2),
+  rgba(255,255,255,.8));
+}
+
+#page-veil{
+  position:fixed;
+  inset:0;
+  background:#000;
+  z-index:99999;
+  animation:veilOut 1s ease forwards;
+}
+
+@keyframes veilOut{
+  from{opacity:1}
+  to{opacity:0;visibility:hidden}
+}
+
+.shimmer-text{
+  background:linear-gradient(
+  90deg,
+  rgba(255,255,255,.6),
+  white,
+  rgba(255,255,255,.6));
+  background-size:200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shimmer 4s linear infinite;
+}
+
+@keyframes shimmer{
+  from{background-position:-200%}
+  to{background-position:200%}
+}
+
+  /* ── Video background ── */
+  #bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  #bg-video-wrap video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 0.75;
+  }
+  #bg-video-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.22) 0%,
+      rgba(0,0,0,0.08) 40%,
+      rgba(0,0,0,0.22) 100%);
+  }
+
+  /* Make all sections transparent so the video shows through */
+  section, footer { background: transparent !important; }
+
+  .liquid-glass {
+    background: rgba(255,255,255,0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.45) 0%,
+      rgba(255,255,255,0.15) 20%,
+      rgba(255,255,255,0) 40%,
+      rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.15) 80%,
+      rgba(255,255,255,0.45) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .liquid-glass-strong {
+    background: rgba(255,255,255,0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border: none;
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass-strong::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.5) 0%,
+      rgba(255,255,255,0.2) 20%,
+      rgba(255,255,255,0) 40%,
+      rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.2) 80%,
+      rgba(255,255,255,0.5) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @keyframes driftA { 0%,100%{transform:translate(0,0)} 40%{transform:translate(22px,-28px)} 70%{transform:translate(-18px,18px)} }
+  .orb { position:absolute; border-radius:50%; pointer-events:none; filter:blur(90px); animation:driftA 15s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ══════════ GLOBAL 3D / GLOW / TRANSITION LAYER ══════════ */
+
+  :root{
+    --violet: 167,139,250;
+    --pink: 244,114,182;
+    --cyan: 103,232,249;
+    --glow-soft: 0 0 18px rgba(167,139,250,.25), 0 0 38px rgba(244,114,182,.12);
+  }
+
+  body{ perspective: 1800px; }
+
+  /* smooth global transitions on color/shadow/transform-affecting props */
+  a, button, .liquid-glass, .liquid-glass-strong, h1, h2, h3, p, span, img, svg, .tilt-card {
+    transition: transform .55s cubic-bezier(.16,1,.3,1),
+                box-shadow .55s cubic-bezier(.16,1,.3,1),
+                filter .55s cubic-bezier(.16,1,.3,1),
+                background-color .4s ease,
+                border-color .4s ease,
+                opacity .5s ease;
+  }
+
+  /* ---------- glow halo applied to glass surfaces ---------- */
+  .liquid-glass, .liquid-glass-strong{
+    will-change: transform, box-shadow;
+  }
+  .liquid-glass:hover, .liquid-glass-strong:hover{
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.08),
+      0 8px 30px -8px rgba(0,0,0,.6),
+      0 0 24px -2px rgba(var(--violet),.35),
+      0 0 46px -4px rgba(var(--pink),.22),
+      inset 0 1px 1px rgba(255,255,255,.15);
+    transform: translateY(-4px) scale(1.015);
+  }
+
+  /* ---------- 3D tilt wrapper (JS sets --rx/--ry/--tz) ---------- */
+  .tilt-card{
+    --rx: 0deg; --ry: 0deg; --tz: 0px;
+    transform-style: preserve-3d;
+    transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateZ(var(--tz));
+  }
+
+  /* ---------- glow pulse for accent glyphs / icons ---------- */
+  .glow-pulse{
+    animation: glowPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes glowPulse{
+    0%,100%{ filter: drop-shadow(0 0 4px rgba(var(--violet),.5)) drop-shadow(0 0 10px rgba(var(--pink),.25)); opacity:.7; }
+    50%{ filter: drop-shadow(0 0 12px rgba(var(--cyan),.85)) drop-shadow(0 0 26px rgba(var(--violet),.5)); opacity:1; }
+  }
+
+  /* ---------- text glow on headings ---------- */
+  .text-glow{
+    text-shadow:
+      0 0 14px rgba(var(--violet),.35),
+      0 0 30px rgba(var(--pink),.18);
+  }
+
+  /* ---------- magnetic hover-rotate for buttons/badges ---------- */
+  .hover-rotate{
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .5s ease;
+  }
+  .hover-rotate:hover{
+    transform: rotate(-3deg) scale(1.07);
+  }
+
+  /* ---------- spin-slow for glyph dividers / orbiting accents ---------- */
+  .spin-slow{ animation: spinSlow 18s linear infinite; display:inline-block; }
+  @keyframes spinSlow{ to{ transform: rotate(360deg); } }
+
+  /* ---------- fade-rise scroll reveal (driven by IntersectionObserver) ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(36px) scale(.97);
+    filter: blur(6px);
+    transition: opacity 1s cubic-bezier(.16,1,.3,1),
+                transform 1s cubic-bezier(.16,1,.3,1),
+                filter 1s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.is-visible{
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  /* ---------- glow ring sweep for primary CTA ---------- */
+  .glow-ring{ position: relative; }
+  .glow-ring::after{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg,
+      rgba(var(--violet),0), rgba(var(--violet),.9),
+      rgba(var(--pink),.9), rgba(var(--cyan),.9),
+      rgba(var(--violet),0));
+    opacity: 0;
+    z-index: -1;
+    filter: blur(10px);
+    transition: opacity .5s ease;
+    animation: ringSpin 6s linear infinite;
+  }
+  .glow-ring:hover::after{ opacity: .85; }
+  @keyframes ringSpin{ to{ transform: rotate(360deg); } }
+
+  /* ---------- shimmer sweep across glass cards on hover ---------- */
+  .sheen{ position: relative; overflow: hidden; }
+  .sheen::before{
+    content:"";
+    position:absolute;
+    top:0; left:-150%;
+    width:60%; height:100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.16), transparent);
+    transform: skewX(-15deg);
+    transition: left 1.1s cubic-bezier(.16,1,.3,1);
+    pointer-events:none;
+  }
+  .sheen:hover::before{ left:150%; }
+
+  /* ---------- floating idle motion ---------- */
+  .float-y{ animation: floatY 5s ease-in-out infinite; }
+  @keyframes floatY{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+
+  /* ---------- number pop on countdown tick ---------- */
+  @keyframes numPop{ 0%{ transform: scale(1); filter: drop-shadow(0 0 0 rgba(var(--cyan),0)); } 35%{ transform: scale(1.18); filter: drop-shadow(0 0 10px rgba(var(--cyan),.8)); } 100%{ transform: scale(1); filter: drop-shadow(0 0 0 rgba(var(--cyan),0)); } }
+  .num-pop{ animation: numPop .5s ease-out; display:inline-block; }
+
+  /* ---------- confetti / surprise glow burst ---------- */
+  @keyframes burstGlow{
+    0%{ box-shadow: 0 0 0 0 rgba(var(--violet),.6), 0 0 0 0 rgba(var(--pink),.4); }
+    60%{ box-shadow: 0 0 40px 14px rgba(var(--violet),.25), 0 0 80px 30px rgba(var(--pink),.12); }
+    100%{ box-shadow: 0 0 0 0 rgba(var(--violet),0), 0 0 0 0 rgba(var(--pink),0); }
+  }
+  .burst-glow{ animation: burstGlow 1.4s ease-out; }
+
+  /* ---------- scrollbar styling for that polished feel ---------- */
+  ::-webkit-scrollbar{ width: 8px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{ background: linear-gradient(rgba(var(--violet),.4), rgba(var(--pink),.4)); border-radius: 9999px; }
+
+  /* ---------- selection color matches palette ---------- */
+  ::selection{ background: rgba(var(--violet),.35); color:#fff; }
+
+  /* ---------- glyph glow ---------- */
+  .glyph-glow{
+    filter: drop-shadow(0 0 6px rgba(var(--violet),.6));
+  }
+
+  /* ══════════ ENHANCED HOVER EFFECTS ══════════ */
+
+  /* Glass cards lift + glow stronger on hover */
+  .liquid-glass:hover, .liquid-glass-strong:hover {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.14),
+      0 12px 40px -8px rgba(0,0,0,.7),
+      0 0 32px -2px rgba(var(--violet),.55),
+      0 0 60px -4px rgba(var(--pink),.35),
+      inset 0 1px 1px rgba(255,255,255,.22) !important;
+    transform: translateY(-6px) scale(1.022) !important;
+    background: rgba(255,255,255,0.055) !important;
+  }
+
+  /* Headings glow brighter on hover */
+  h1:hover, h2:hover, h3:hover {
+    text-shadow:
+      0 0 20px rgba(var(--violet),.7),
+      0 0 40px rgba(var(--pink),.45),
+      0 0 70px rgba(var(--cyan),.25);
+  }
+
+  /* Paragraphs / body text subtle lift */
+  p:hover {
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 0 12px rgba(var(--violet),.2);
+  }
+
+  /* Spans (labels, badges, date strings) */
+  span:not(.block):hover {
+    color: rgba(255,255,255,1);
+    filter: drop-shadow(0 0 6px rgba(var(--violet),.5));
+  }
+
+  /* Divider glyph — spin faster + glow on hover */
+  .spin-slow:hover {
+    animation-duration: 2s !important;
+    filter: drop-shadow(0 0 12px rgba(var(--violet),.9)) drop-shadow(0 0 24px rgba(var(--pink),.6)) !important;
+    color: white;
+  }
+
+  /* Navbar logo pill hover */
+  nav .liquid-glass:hover {
+    transform: rotate(8deg) scale(1.15) !important;
+    box-shadow: 0 0 22px rgba(var(--violet),.6), 0 0 44px rgba(var(--pink),.3) !important;
+  }
+
+  /* Countdown ring circles — glow halo on parent hover */
+  .liquid-glass.glow-ring:hover svg circle:last-child {
+    filter: drop-shadow(0 0 10px rgba(var(--violet),1));
+  }
+
+  /* Number cells in grid — accent underline sweep */
+  .tilt-card:hover .font-heading {
+    text-shadow: 0 0 18px rgba(var(--violet),.55), 0 0 36px rgba(var(--pink),.3);
+  }
+
+  /* Quote mark pop */
+  .tilt-card:hover .glow-pulse {
+    animation-duration: 1s !important;
+    opacity: 1 !important;
+  }
+
+  /* Footer text */
+  footer p:hover {
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 0 16px rgba(var(--violet),.5), 0 0 30px rgba(var(--pink),.3);
+  }
+
+  /* Scroll indicator pulse on hover */
+  .absolute.bottom-10:hover .w-px {
+    background: linear-gradient(to bottom, rgba(var(--violet),0.9), rgba(var(--pink),0.6), transparent) !important;
+  }
+
+  /* Buttons: stronger magnetic feel */
+  button:not([aria-label="Toggle background music"]):hover {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.15),
+      0 0 28px rgba(var(--violet),.6),
+      0 0 52px rgba(var(--pink),.35),
+      inset 0 1px 1px rgba(255,255,255,.2);
+    filter: brightness(1.15);
+  }
+
+  /* Orb ambient blobs pulse on page hover (subtle) */
+  section:hover .orb {
+    opacity: 0.85;
+    filter: blur(70px);
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/framer-motion@11.11.17/dist/framer-motion.js" crossorigin="anonymous"></script>
+<script>
+  window.Motion = window.FramerMotion || window.Motion;
+</script>
+</head>
+<body>
+<div id="page-veil"></div>
+<div id="scroll-bar"></div>
+<div id="cursor-glow"></div>
+<canvas id="particles-canvas"></canvas>
+
+<!-- Video background -->
+<div id="bg-video-wrap">
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="./bg_video.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div id="root" style="position:relative;z-index:1;"></div>
+
+<audio id="bgAudio" src="song.mp3" loop preload="auto" style="display:none"></audio>
+<script>
+(function() {
+  var audio = document.getElementById('bgAudio');
+  audio.volume = 0.5;
+
+  audio.addEventListener('error', function() {
+    console.warn('[Rumana] song.mp3 not found — keep it in the same folder as index.html.');
+  });
+
+  var started = false;
+  function tryPlay() {
+    if (started) return;
+    var p = audio.play();
+    if (p && typeof p.then === 'function') {
+      p.then(function() { started = true; }).catch(function() {});
+    } else {
+      started = true;
+    }
+  }
+
+  // Try immediately (works if browser allows)
+  tryPlay();
+
+  // Catch-all: play on FIRST interaction of any kind
+  ['click','touchstart','keydown','mousemove','scroll','pointerdown'].forEach(function(evt) {
+    document.addEventListener(evt, function handler() {
+      tryPlay();
+      if (started) document.removeEventListener(evt, handler, true);
+    }, true);
+  });
+
+  window.addEventListener('load', tryPlay);
+  setTimeout(tryPlay, 800);
+})();
+</script>
+
+<!-- BlurText -->
+<script type="text/babel">
+const { motion, useInView } = window.Motion;
+
+window.BlurText = function BlurText({ text, className, as: Tag = 'p' }) {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { threshold: 0.1, once: true });
+  const words = text.split(' ');
+
+  return (
+    <Tag
+      ref={ref}
+      style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', rowGap: '0.1em' }}
+      className={className}
+    >
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ filter: 'blur(10px)', opacity: 0, y: 50 }}
+          animate={isInView ? {
+            filter: ['blur(10px)', 'blur(5px)', 'blur(0px)'],
+            opacity: [0, 0.5, 1],
+            y: [50, -5, 0],
+          } : {}}
+          transition={{
+            duration: 0.7,
+            delay: (i * 100) / 1000,
+            ease: 'easeOut',
+            times: [0, 0.5, 1],
+          }}
+          style={{ display: 'inline-block', marginRight: '0.28em' }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </Tag>
+  );
+};
+</script>
+
+<!-- Music toggle button -->
+<script type="text/babel">
+window.MusicButton = function MusicButton() {
+  const [playing, setPlaying] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    // Show button after loader fades
+    const t = setTimeout(() => setMounted(true), 1200);
+    // Sync state with actual audio element
+    const audio = document.getElementById('bgAudio');
+    if (!audio) return () => clearTimeout(t);
+    const onPlay  = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    audio.addEventListener('play',  onPlay);
+    audio.addEventListener('pause', onPause);
+    // Reflect current state immediately
+    if (!audio.paused) setPlaying(true);
+    return () => {
+      clearTimeout(t);
+      audio.removeEventListener('play',  onPlay);
+      audio.removeEventListener('pause', onPause);
+    };
+  }, []);
+
+  const toggle = () => {
+    const audio = document.getElementById('bgAudio');
+    if (!audio) return;
+    if (audio.paused) { audio.play().catch(()=>{}); }
+    else              { audio.pause(); }
+  };
+
+  return (
+    <>
+      <style>{`
+        @keyframes eq { 0%,100%{height:4px} 50%{height:18px} }
+        #music-btn {
+          position: fixed;
+          bottom: 1.5rem;
+          right: 1.5rem;
+          z-index: 99999;
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 9999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          border: 1.5px solid rgba(167,139,250,0.45);
+          background: rgba(255,255,255,0.06);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 0 18px rgba(167,139,250,0.4), 0 0 36px rgba(244,114,182,0.2), inset 0 1px 1px rgba(255,255,255,0.15);
+          opacity: 0;
+          transform: scale(0.7) translateY(20px);
+          transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+        #music-btn.visible {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        #music-btn:hover {
+          transform: scale(1.14) rotate(-6deg) !important;
+          box-shadow: 0 0 30px rgba(167,139,250,0.75), 0 0 60px rgba(244,114,182,0.45), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+          border-color: rgba(167,139,250,0.85) !important;
+          background: rgba(255,255,255,0.10) !important;
+        }
+        #music-btn .bar {
+          display: block;
+          width: 3px;
+          border-radius: 9999px;
+          background: linear-gradient(to top, rgba(167,139,250,1), rgba(244,114,182,0.9));
+        }
+      `}</style>
+      <button
+        id="music-btn"
+        className={mounted ? 'visible' : ''}
+        onClick={toggle}
+        aria-label="Toggle background music"
+        title={playing ? 'Pause music' : 'Play music'}
+      >
+        <div style={{ display:'flex', alignItems:'flex-end', gap:'3px', height:18 }}>
+          {[0,1,2,3].map(i => (
+            <span
+              key={i}
+              className="bar"
+              style={{
+                height: playing ? undefined : 4,
+                animation: playing ? `eq ${0.8 + i*0.13}s ease-in-out ${-i*0.2}s infinite` : 'none',
+              }}
+            />
+          ))}
+        </div>
+      </button>
+    </>
+  );
+};
+</script>
+
+<!-- Loader -->
+<script type="text/babel">
+const { motion: ml } = window.Motion;
+
+window.Loader = function Loader() {
+  const [out, setOut] = React.useState(false);
+  React.useEffect(() => {
+    const t = setTimeout(() => setOut(true), 2600);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <ml.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: out ? 0 : 1 }}
+      transition={{ duration: 1, ease: 'easeInOut' }}
+      style={{ pointerEvents: out ? 'none' : 'auto', visibility: out ? 'hidden' : 'visible' }}
+      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
+    >
+      <ml.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.3, ease: 'easeOut' }}
+        className="font-heading italic text-white text-6xl md:text-7xl tracking-[-2px] text-glow"
+      >
+        Rumana
+      </ml.div>
+      <ml.div
+        initial={{ width: 0 }}
+        animate={{ width: 200 }}
+        transition={{ duration: 1.4, delay: 1, ease: 'easeInOut' }}
+        className="h-px bg-gradient-to-r from-transparent via-white/60 to-transparent mt-6"
+      />
+      <ml.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.6, ease: 'easeOut' }}
+        className="mt-5 text-[11px] tracking-[0.5em] uppercase text-white/50 font-body"
+      >
+        A celebration awaits
+      </ml.div>
+    </ml.div>
+  );
+};
+</script>
+
+<!-- Navbar -->
+<script type="text/babel">
+window.Navbar = function Navbar() {
+  return (
+    <nav className="fixed top-4 left-0 right-0 z-50 px-8 lg:px-16 flex items-center justify-between">
+      <div className="liquid-glass hover-rotate w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+        <span className="font-heading italic text-white text-xl glow-pulse">r</span>
+      </div>
+      <div className="liquid-glass sheen rounded-full px-5 py-2 text-xs tracking-[0.3em] uppercase text-white/70 font-body hidden sm:block">
+        19 · June · 2007
+      </div>
+      <div className="w-12 h-12 flex-shrink-0" />
+    </nav>
+  );
+};
+</script>
+
+<!-- Hero -->
+<script type="text/babel">
+const { motion: mh } = window.Motion;
+const HMI = { filter: 'blur(10px)', opacity: 0, y: 20 };
+const HMA = { filter: 'blur(0px)', opacity: 1, y: 0 };
+
+window.HeroSection = function HeroSection() {
+  return (
+    <section className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center text-center px-6">
+      <div className="orb float-y" style={{ width: 360, height: 360, top: '8%', left: '-6%', background: 'radial-gradient(circle, rgba(167,139,250,.30), transparent 70%)' }} />
+      <div className="orb float-y" style={{ width: 300, height: 300, bottom: '10%', right: '-4%', background: 'radial-gradient(circle, rgba(244,114,182,.26), transparent 70%)', animationDelay: '1.4s' }} />
+      <div className="orb float-y" style={{ width: 240, height: 240, top: '38%', right: '18%', background: 'radial-gradient(circle, rgba(103,232,249,.22), transparent 70%)', animationDelay: '2.2s' }} />
+      <mh.p
+        initial={HMI} animate={HMA} transition={{ duration: 0.7, delay: 2.7, ease: 'easeOut' }}
+        className="text-[11px] tracking-[0.55em] uppercase text-white/60 font-body mb-8"
+      >
+        Born June 19, 2007
+      </mh.p>
+
+      <BlurText
+        text="Rumana"
+        as="h1"
+        className="font-heading italic text-white leading-[0.9] tracking-[-2px] text-glow"
+      />
+      <style>{`
+        h1.font-heading { font-size: clamp(4.5rem, 16vw, 11rem) !important; }
+      `}</style>
+
+      <mh.div
+        initial={{ height: 0, opacity: 0 }} animate={{ height: 60, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 3.4, ease: 'easeOut' }}
+        className="w-px bg-gradient-to-b from-transparent via-white/50 to-transparent my-7"
+      />
+
+      <mh.p
+        initial={HMI} animate={HMA} transition={{ duration: 0.8, delay: 3.5, ease: 'easeOut' }}
+        className="font-heading italic text-white/70 text-lg md:text-2xl max-w-xl leading-relaxed"
+      >
+        Every star in the sky paused — just for a moment — on the day you arrived.
+      </mh.p>
+
+      <mh.p
+        initial={HMI} animate={HMA} transition={{ duration: 0.5, delay: 3.9, ease: 'easeOut' }}
+        className="mt-6 text-xs tracking-[0.4em] uppercase text-white/60 font-body"
+      >
+        19 · 06 · 2007
+      </mh.p>
+
+      <mh.div
+        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 4.2, ease: 'easeOut' }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <div className="w-px h-11" style={{background:'linear-gradient(to bottom, rgba(255,255,255,0.6), transparent)', animation:'pulse 2s ease-in-out infinite'}} />
+        <span className="text-[10px] tracking-[0.3em] uppercase text-white/30 font-body">scroll</span>
+        <style>{`@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}`}</style>
+      </mh.div>
+    </section>
+  );
+};
+</script>
+
+<!-- Countdown -->
+<script type="text/babel">
+const { motion: mcd, useInView: uivcd } = window.Motion;
+const C = 276.5;
+
+window.CountdownSection = function CountdownSection() {
+  const ref = React.useRef(null);
+  const inView = uivcd(ref, { threshold: 0.1, once: true });
+  const [vals, setVals] = React.useState({ d: '--', h: '--', m: '--', s: '--' });
+  const [offsets, setOffsets] = React.useState({ d: C, h: C, m: C, s: C });
+  const [celebrate, setCelebrate] = React.useState(false);
+  const [dobDay, setDobDay] = React.useState('');
+
+  React.useEffect(() => {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    setDobDay(days[new Date(2007,5,19).getDay()]);
+
+    function nextBd() {
+      const n = new Date(), y = n.getFullYear();
+      let bd = new Date(y,5,19);
+      if (bd <= n) bd = new Date(y+1,5,19);
+      return bd;
+    }
+    function p2(n) { return String(n).padStart(2,'0'); }
+    function tick() {
+      const now = new Date(), bd = nextBd(), diff = bd - now;
+      if (diff <= 0) {
+        setVals({ d:'00', h:'00', m:'00', s:'00' });
+        setCelebrate(true);
+        return;
+      }
+      const d = Math.floor(diff/864e5);
+      const h = Math.floor((diff%864e5)/36e5);
+      const m = Math.floor((diff%36e5)/6e4);
+      const s = Math.floor((diff%6e4)/1e3);
+      setVals({ d:p2(d), h:p2(h), m:p2(m), s:p2(s) });
+      setOffsets({
+        d: C - (d/365)*C,
+        h: C - (h/24)*C,
+        m: C - (m/60)*C,
+        s: C - (s/60)*C,
+      });
+    }
+    tick();
+    const iv = setInterval(tick, 1000);
+    return () => clearInterval(iv);
+  }, []);
+
+  const units = [
+    { key:'d', label:'Days' },
+    { key:'h', label:'Hours' },
+    { key:'m', label:'Minutes' },
+    { key:'s', label:'Seconds' },
+  ];
+
+  function handleTilt(e) {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty('--ry', (px * 16) + 'deg');
+    el.style.setProperty('--rx', (-py * 16) + 'deg');
+    el.style.setProperty('--tz', '14px');
+  }
+  function resetTilt(e) {
+    const el = e.currentTarget;
+    el.style.setProperty('--ry', '0deg');
+    el.style.setProperty('--rx', '0deg');
+    el.style.setProperty('--tz', '0px');
+  }
+
+  return (
+    <section ref={ref} className="relative py-28 md:py-36 px-6 text-center">
+      <mcd.span
+        initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="inline-block text-[11px] tracking-[0.5em] uppercase text-white/60 font-body mb-3"
+      >
+        Until your day
+      </mcd.span>
+      <mcd.h2
+        initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+        className="font-heading italic text-white text-4xl md:text-5xl text-glow"
+      >
+        The Countdown
+      </mcd.h2>
+
+      <mcd.div
+        initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+        className="flex justify-center gap-6 md:gap-10 flex-wrap mt-14"
+      >
+        {units.map(u => (
+          <div key={u.key} className="flex flex-col items-center gap-3 tilt-card" onMouseMove={handleTilt} onMouseLeave={resetTilt}>
+            <div className="liquid-glass glow-ring relative rounded-full" style={{ width: 'clamp(88px,16vw,120px)', height: 'clamp(88px,16vw,120px)' }}>
+              <svg viewBox="0 0 100 100" width="100%" height="100%" style={{ position:'absolute', inset:0, transform:'rotate(-90deg)' }}>
+                <circle cx="50" cy="50" r="44" fill="none" strokeWidth="1.5" stroke="rgba(255,255,255,0.12)" />
+                <circle cx="50" cy="50" r="44" fill="none" strokeWidth="1.5" stroke="white" strokeLinecap="round"
+                  strokeDasharray={C} strokeDashoffset={offsets[u.key]}
+                  style={{ transition: 'stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)', filter: 'drop-shadow(0 0 6px rgba(167,139,250,.7))' }} />
+              </svg>
+              <div key={vals[u.key]} className="num-pop absolute inset-0 flex items-center justify-center font-heading italic text-white" style={{ fontSize: 'clamp(1.5rem,3.5vw,2.2rem)' }}>
+                {vals[u.key]}
+              </div>
+            </div>
+            <span className="text-[10px] tracking-[0.35em] uppercase text-white/50 font-body">{u.label}</span>
+          </div>
+        ))}
+      </mcd.div>
+
+      <div className="mt-12">
+        <div className="liquid-glass inline-flex items-center gap-3 px-7 py-4 rounded-full text-xs tracking-[0.25em] uppercase text-white/70 font-body">
+          Born on a beautiful <b className="text-white font-normal tracking-[0.2em]">{dobDay}</b> in <b className="text-white font-normal tracking-[0.2em]">June</b>
+        </div>
+      </div>
+
+      {celebrate && (
+        <div className="font-heading italic text-white text-2xl md:text-4xl mt-8">✦ Happy Birthday, Rumana ✦</div>
+      )}
+    </section>
+  );
+};
+</script>
+
+<!-- Divider -->
+<script type="text/babel">
+window.Divider = function Divider({ glyph }) {
+  return (
+    <div className="flex items-center gap-7 max-w-md mx-auto px-6 py-4">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <span className="text-xs text-white/50 glyph-glow spin-slow">{glyph}</span>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    </div>
+  );
+};
+</script>
+
+<!-- Numbers -->
+<script type="text/babel">
+const { motion: mn, useInView: uivn } = window.Motion;
+
+window.NumbersSection = function NumbersSection() {
+  const ref = React.useRef(null);
+  const inView = uivn(ref, { threshold: 0.1, once: true });
+  const [items, setItems] = React.useState([]);
+
+  React.useEffect(() => {
+    const dob = new Date(2007,5,19), now = new Date();
+    const ms = now - dob;
+    const totalDays = Math.floor(ms/864e5);
+    const age = now.getFullYear() - 2007 - (now < new Date(now.getFullYear(),5,19) ? 1 : 0);
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    setItems([
+      { icon:'✦', val: age, lbl:'Years Young', sub:'Each one a masterpiece' },
+      { icon:'◇', val: totalDays.toLocaleString(), lbl:'Days Lived', sub:'Every one a story' },
+      { icon:'✧', val: Math.floor(ms/36e5).toLocaleString(), lbl:'Hours of Wonder', sub:'Of you in this world' },
+      { icon:'◈', val: Math.floor(totalDays/7).toLocaleString(), lbl:'Weeks of Beauty', sub:'And counting' },
+      { icon:'✦', val:'Gemini', lbl:'Zodiac Sign', sub:'Curious · Expressive · Free' },
+      { icon:'◇', val: days[new Date(2007,5,19).getDay()], lbl:'Day Born', sub:'19 June 2007' },
+    ]);
+  }, []);
+
+  return (
+    <section ref={ref} className="px-6 md:px-16 py-28 md:py-36">
+      <div className="text-center mb-14">
+        <mn.span
+          initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="inline-block text-[11px] tracking-[0.5em] uppercase text-white/60 font-body mb-3"
+        >
+          The mathematics of you
+        </mn.span>
+        <mn.h2
+          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+          className="font-heading italic text-white text-4xl md:text-5xl text-glow"
+        >
+          Your Life in Numbers
+        </mn.h2>
+      </div>
+
+      <div className="liquid-glass grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 rounded-3xl overflow-hidden max-w-5xl mx-auto">
+        {items.map((it, i) => (
+          <mn.div
+            key={it.lbl}
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: i * 0.08, ease: 'easeOut' }}
+            className="p-9 border-white/10 sheen tilt-card hover:bg-white/5"
+            onMouseMove={(e)=>{
+              const el=e.currentTarget, r=el.getBoundingClientRect();
+              const px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+              el.style.setProperty('--ry',(px*10)+'deg');
+              el.style.setProperty('--rx',(-py*10)+'deg');
+              el.style.setProperty('--tz','8px');
+            }}
+            onMouseLeave={(e)=>{
+              const el=e.currentTarget;
+              el.style.setProperty('--ry','0deg');
+              el.style.setProperty('--rx','0deg');
+              el.style.setProperty('--tz','0px');
+            }}
+            style={{ borderRight: (i % 3 !== 2) ? '1px solid rgba(255,255,255,0.08)' : 'none', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.08)' : 'none' }}
+          >
+            <div className="text-lg opacity-50 mb-4 glow-pulse">{it.icon}</div>
+            <div className="font-heading italic text-white text-3xl md:text-4xl leading-none">{it.val}</div>
+            <div className="text-[11px] tracking-[0.25em] uppercase text-white/50 font-body mt-2">{it.lbl}</div>
+            <div className="text-sm text-white/40 italic font-heading mt-1">{it.sub}</div>
+          </mn.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+</script>
+
+<!-- Wishes -->
+<script type="text/babel">
+const { motion: mw, useInView: uivw } = window.Motion;
+
+const WISHES = [
+  { text: 'May every single one of your dreams know your name, and find its way to you this year, Rumana.', from: '✦ A heartfelt wish' },
+  { text: 'You hold a rare kind of light — the kind that makes rooms feel warmer and moments feel softer. Never lose it.', from: '✦ With admiration' },
+  { text: 'On this day, something beautiful was added to the world. And all these years later, it still is.', from: '✦ Always true' },
+  { text: 'Like fine gold, you only grow more precious with time. Happy Birthday to someone truly extraordinary.', from: '✦ Forever yours' },
+  { text: 'Some people arrive and immediately make the whole world feel like a better place. You are one of them.', from: '✦ Sincerely' },
+  { text: 'May this birthday be the beginning of the most luminous chapter your story has ever held.', from: '✦ With love' },
+];
+
+window.WishesSection = function WishesSection() {
+  const ref = React.useRef(null);
+  const inView = uivw(ref, { threshold: 0.1, once: true });
+
+  return (
+    <section ref={ref} className="px-6 md:px-16 py-28 md:py-36 text-center">
+      <span className="inline-block text-[11px] tracking-[0.5em] uppercase text-white/60 font-body mb-3">From the heart</span>
+      <h2 className="font-heading italic text-white text-4xl shimmer-text md:text-5xl mb-14">Birthday Wishes</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+        {WISHES.map((w, i) => (
+          <mw.div
+            key={i}
+            initial={{ opacity: 0, y: 28 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: i * 0.08, ease: 'easeOut' }}
+            className="liquid-glass sheen tilt-card rounded-3xl p-9 text-left hover:bg-white/5 transition-colors"
+            onMouseMove={(e)=>{
+              const el=e.currentTarget, r=el.getBoundingClientRect();
+              const px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+              el.style.setProperty('--ry',(px*8)+'deg');
+              el.style.setProperty('--rx',(-py*8)+'deg');
+              el.style.setProperty('--tz','10px');
+            }}
+            onMouseLeave={(e)=>{
+              const el=e.currentTarget;
+              el.style.setProperty('--ry','0deg');
+              el.style.setProperty('--rx','0deg');
+              el.style.setProperty('--tz','0px');
+            }}
+          >
+            <div className="font-heading italic text-white/30 text-5xl leading-none mb-3 glow-pulse">"</div>
+            <p className="font-heading italic text-white/85 text-base md:text-lg leading-relaxed">{w.text}</p>
+            <div className="mt-6 text-[10px] tracking-[0.3em] uppercase text-white/50 font-body">{w.from}</div>
+          </mw.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+</script>
+
+<!-- Surprise -->
+<script type="text/babel">
+const { motion: ms } = window.Motion;
+
+function launchConfetti(canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+  const ps = Array.from({ length: 180 }, () => ({
+    x: Math.random()*canvas.width, y: canvas.height*(0.2+Math.random()*0.3),
+    vx: (Math.random()-0.5)*5, vy: -(Math.random()*6+3),
+    w: Math.random()*9+4, h: Math.random()*5+2,
+    rot: Math.random()*360, rv: (Math.random()-0.5)*10,
+    col: ['#ffffff','#cfcfcf','#9e9e9e','#e8e8e8','#bdbdbd'][Math.floor(Math.random()*5)],
+    alpha: 1,
+  }));
+  let fr = 0;
+  (function f() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ps.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.rot += p.rv;
+      if (fr > 120) p.alpha = Math.max(0, p.alpha - 0.008);
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.globalAlpha = p.alpha; ctx.fillStyle = p.col;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+    });
+    fr++;
+    if (fr < 260) requestAnimationFrame(f);
+    else canvas.style.display = 'none';
+  })();
+}
+
+window.SurpriseSection = function SurpriseSection() {
+  const [revealed, setRevealed] = React.useState(false);
+  const canvasRef = React.useRef(null);
+  const btnRef = React.useRef(null);
+
+  const onReveal = () => {
+    launchConfetti(canvasRef.current);
+    setRevealed(true);
+    if (btnRef.current) {
+      btnRef.current.classList.add('burst-glow');
+      setTimeout(() => btnRef.current && btnRef.current.classList.remove('burst-glow'), 1500);
+    }
+  };
+
+  const magnetMove = (e) => {
+    const el = e.currentTarget, r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `translate(${px*10}px, ${py*10}px) scale(1.04)`;
+  };
+  const magnetLeave = (e) => { e.currentTarget.style.transform = ''; };
+
+  return (
+    <section className="px-6 py-28 md:py-36 text-center relative">
+      <canvas ref={canvasRef} style={{ position:'fixed', inset:0, zIndex:8000, pointerEvents:'none', display:'none' }} />
+      <div className="max-w-xl mx-auto">
+        <span className="inline-block text-[11px] tracking-[0.5em] uppercase text-white/60 font-body mb-3">Something special</span>
+        <h2 className="font-heading italic text-white text-4xl shimmer-text md:text-5xl mb-6 text-glow">A Surprise for You</h2>
+        <p className="font-heading italic text-white/60 text-base md:text-lg mb-10">One tap away from a moment made just for you.</p>
+
+        {!revealed && (
+          <button
+            ref={btnRef}
+            onClick={onReveal}
+            onMouseMove={magnetMove}
+            onMouseLeave={magnetLeave}
+            className="liquid-glass-strong glow-ring sheen rounded-full px-8 py-4 inline-flex items-center gap-3 text-white font-heading italic text-lg hover:bg-white/5 transition-colors float-y"
+          >
+            <span className="glow-pulse">✦</span>
+            <span>Reveal Surprise</span>
+          </button>
+        )}
+
+        <ms.div
+          initial={{ opacity: 0, y: 16, scale: 0.94, filter: 'blur(8px)' }}
+          animate={revealed ? { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' } : {}}
+          transition={{ duration: 1.1, ease: 'easeOut' }}
+          className="mt-14"
+          style={{ pointerEvents: revealed ? 'auto' : 'none' }}
+        >
+          {revealed && (
+            <>
+              <div className="font-heading italic text-white text-4xl md:text-5xl leading-tight mb-4 text-glow">Happy Birthday,<br/>Rumana.</div>
+              <p className="font-heading italic text-white/65 text-base md:text-lg leading-relaxed">
+                The world is richer, warmer, and more full of wonder because you exist in it. On your special day and every day — you are seen, you are loved, you are everything.
+              </p>
+              <div className="mt-8 text-xs tracking-[0.4em] uppercase text-white/60 font-body">June 19, 2007 — Forever celebrated</div>
+            </>
+          )}
+        </ms.div>
+      </div>
+    </section>
+  );
+};
+</script>
+
+<!-- Footer -->
+<script type="text/babel">
+window.Footer = function Footer() {
+  return (
+    <footer className="relative px-6 py-24 text-center overflow-hidden border-t border-white/10">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 flex items-center justify-center font-heading italic text-white leading-none pointer-events-none select-none"
+        style={{ fontSize: 'clamp(3rem,10vw,7rem)', opacity: 0.06 }}
+      >
+        Rumana
+      </div>
+      <div className="relative">
+        <p className="font-heading italic text-white/60 text-lg md:text-2xl mb-3 text-glow">To the one who makes the world more beautiful simply by being in it.</p>
+        <p className="text-xs tracking-[0.4em] uppercase text-white/60 font-body mt-3">19 · June · 2007</p>
+        <p className="mt-10 text-[10px] tracking-[0.25em] uppercase text-white/15 font-body">Made with quiet admiration <span className="glow-pulse">✦</span></p>
+      </div>
+    </footer>
+  );
+};
+</script>
+<script>
+const video = document.getElementById("bgVideo");
+
+video.addEventListener("error", () => {
+  console.log("Video failed to load");
+});
+
+console.log(video.currentSrc);
+</script>
+
+<!-- App root -->
+<script type="text/babel">
+const origError = console.error;
+console.error = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('Each child in a list')) return;
+  origError(...args);
+};
+
+function App() {
+  return (
+    <div>
+      <Loader />
+      <MusicButton />
+      <Navbar />
+      <HeroSection />
+      <CountdownSection />
+      <Divider glyph="◇" />
+      <NumbersSection />
+      <Divider glyph="✦" />
+      <WishesSection />
+      <Divider glyph="✦" />
+      <SurpriseSection />
+      <Footer />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+<script>
+// cursor glow
+const glow=document.getElementById("cursor-glow");
+
+document.addEventListener("mousemove",(e)=>{
+  glow.style.left=e.clientX+"px";
+  glow.style.top=e.clientY+"px";
+});
+
+// scroll progress
+const bar=document.getElementById("scroll-bar");
+
+window.addEventListener("scroll",()=>{
+  const p=(window.scrollY/
+  (document.body.scrollHeight-window.innerHeight))*100;
+
+  bar.style.width=p+"%";
+});
+
+// particles — interactive glowing constellation
+(()=>{
+ const canvas=document.getElementById("particles-canvas");
+ const ctx=canvas.getContext("2d");
+ const mouse = { x: -9999, y: -9999 };
+
+ function resize(){
+   canvas.width=innerWidth;
+   canvas.height=innerHeight;
+ }
+ resize();
+ addEventListener("resize",resize);
+ addEventListener("mousemove", (e)=>{ mouse.x = e.clientX; mouse.y = e.clientY; });
+ addEventListener("mouseleave", ()=>{ mouse.x = -9999; mouse.y = -9999; });
+
+ const PALETTE = ['167,139,250','244,114,182','103,232,249','255,255,255'];
+
+ const dots=Array.from({length:70},()=>({
+   x:Math.random()*innerWidth,
+   y:Math.random()*innerHeight,
+   vx:(Math.random()-0.5)*0.25,
+   vy:(Math.random()-0.5)*0.25,
+   r:Math.random()*1.6+0.6,
+   col: PALETTE[Math.floor(Math.random()*PALETTE.length)],
+ }));
+
+ function draw(){
+   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+   // connecting constellation lines
+   for (let i=0;i<dots.length;i++){
+     for (let j=i+1;j<dots.length;j++){
+       const dx=dots[i].x-dots[j].x, dy=dots[i].y-dots[j].y;
+       const dist=Math.sqrt(dx*dx+dy*dy);
+       if (dist<120){
+         ctx.beginPath();
+         ctx.moveTo(dots[i].x,dots[i].y);
+         ctx.lineTo(dots[j].x,dots[j].y);
+         ctx.strokeStyle=`rgba(167,139,250,${0.12*(1-dist/120)})`;
+         ctx.lineWidth=0.6;
+         ctx.stroke();
+       }
+     }
+     // line to cursor for nearby dots — constellation reacts to user
+     const mdx=dots[i].x-mouse.x, mdy=dots[i].y-mouse.y;
+     const mdist=Math.sqrt(mdx*mdx+mdy*mdy);
+     if (mdist<150){
+       ctx.beginPath();
+       ctx.moveTo(dots[i].x,dots[i].y);
+       ctx.lineTo(mouse.x,mouse.y);
+       ctx.strokeStyle=`rgba(244,114,182,${0.25*(1-mdist/150)})`;
+       ctx.lineWidth=0.8;
+       ctx.stroke();
+     }
+   }
+
+   dots.forEach(d=>{
+     d.x+=d.vx; d.y+=d.vy;
+     if (d.x<0) d.x=innerWidth; if (d.x>innerWidth) d.x=0;
+     if (d.y<0) d.y=innerHeight; if (d.y>innerHeight) d.y=0;
+
+     ctx.beginPath();
+     ctx.arc(d.x,d.y,d.r*2.6,0,Math.PI*2);
+     ctx.fillStyle=`rgba(${d.col},.08)`;
+     ctx.fill();
+
+     ctx.beginPath();
+     ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+     ctx.fillStyle=`rgba(${d.col},.65)`;
+     ctx.fill();
+   });
+
+   requestAnimationFrame(draw);
+ }
+
+ draw();
+})();
+
+// scroll-reveal: fade/rise/blur-in for sections & cards as they enter viewport
+(()=>{
+  function applyReveal(){
+    const targets = document.querySelectorAll('section, .liquid-glass, .liquid-glass-strong');
+    targets.forEach(el=>{
+      if (!el.classList.contains('reveal') && !el.dataset.revealSkip){
+        el.classList.add('reveal');
+      }
+    });
+  }
+  // Run repeatedly for first few seconds since React renders async
+  let tries = 0;
+  const iv = setInterval(()=>{
+    applyReveal();
+    tries++;
+    if (tries > 40) clearInterval(iv);
+  }, 150);
+
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  const observeIv = setInterval(()=>{
+    document.querySelectorAll('.reveal:not(.is-visible)').forEach(el=>observer.observe(el));
+  }, 200);
+  setTimeout(()=>clearInterval(observeIv), 8000);
+})();
+
+// global 3D tilt for any liquid-glass surface not already wired with a custom handler
+(()=>{
+  function wire(){
+    document.querySelectorAll('.liquid-glass, .liquid-glass-strong').forEach(el=>{
+      if (el.dataset.tiltWired) return;
+      el.dataset.tiltWired = '1';
+      el.classList.add('tilt-card');
+      el.addEventListener('mousemove', (e)=>{
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left)/r.width - 0.5;
+        const py = (e.clientY - r.top)/r.height - 0.5;
+        el.style.setProperty('--ry', (px*6)+'deg');
+        el.style.setProperty('--rx', (-py*6)+'deg');
+        el.style.setProperty('--tz', '4px');
+      });
+      el.addEventListener('mouseleave', ()=>{
+        el.style.setProperty('--ry','0deg');
+        el.style.setProperty('--rx','0deg');
+        el.style.setProperty('--tz','0px');
+      });
+    });
+  }
+  let tries = 0;
+  const iv = setInterval(()=>{ wire(); tries++; if (tries>40) clearInterval(iv); }, 150);
+})();
+</script>
+
+</body>
+</html>

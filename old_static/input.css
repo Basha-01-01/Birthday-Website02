@@ -1,0 +1,8 @@
+@import "tailwindcss";
+.font-heading {
+    font-family: 'Instrument Serif', serif;
+}
+
+.font-body {
+    font-family: 'Barlow', sans-serif;
+}
